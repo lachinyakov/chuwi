@@ -1,0 +1,7 @@
+---
+- name: Staring Install Roles
+  hosts: localhost
+  become: true
+
+  roles:
+    - rabbitmq
