@@ -1,11 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
     "hash": "88edb8be51e6501932bf04361d02ee6b",
-    "content-hash": "cc08164f18b5738141ea2fa29906652d",
     "packages": [
         {
             "name": "firebase/php-jwt",
