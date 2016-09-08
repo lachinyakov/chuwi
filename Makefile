@@ -1,3 +1,11 @@
 install-server:
 	ansible-playbook  $(PWD)/build/installRabbitMqServer.yml
-.PHONY:install-server
+composer:
+	@echo docker imega/composer
+
+	docker run --rm \
+		-v $(CURDIR):/data \
+		imega/composer \
+		update --ignore-platform-reqs
+
+.PHONY:install-server composer
