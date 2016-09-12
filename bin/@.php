@@ -1,28 +1,37 @@
 #!/usr/bin/php
 <?php
 
-
-
 $consumers = array(
-    "v",
-    "moshhh",
+    "@msBadger",
+    "@v",
+    "dghost",
+    "domio",
+    "irvis",
+    "ilia",
+    "max",
+    "alexander",
     "cnam",
-    "domio"
+    "moshhh",
 );
 
 
 function consumers() {
     global $consumers;
+
     return $consumers;
 };
 
-function sendMessage() {
-    readline_completion_function('consumers');
+if (isset($argv)) {
+    consumeMessage();
+}
 
+function consumeMessage() {
+    readline_completion_function('consumers');
     $input = readline("Send message: ");
 
-
-
+    var_dump($input);
+    exit;
     print "message send\n";
 }
+
 
