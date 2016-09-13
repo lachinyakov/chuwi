@@ -1,9 +1,11 @@
 #!/usr/bin/php
 <?php
+require_once __DIR__ . '/../vendor/autoload.php';
+$bootstrap = \Messenger\Bootstrap::getInstance();
 
 $consumers = array(
-    "@msBadger",
-    "@v",
+    "mrBadger",
+    "v",
     "dghost",
     "domio",
     "irvis",
@@ -12,6 +14,9 @@ $consumers = array(
     "alexander",
     "cnam",
     "moshhh",
+    "slack/me",
+    "slack/barabule4ka",
+    "telegram"
 );
 
 
@@ -21,17 +26,27 @@ function consumers() {
     return $consumers;
 };
 
-if (isset($argv)) {
-    consumeMessage();
+if (isset($argv[1])) {
+    consumeMessage($argv);
 }
+function consumeMessage($context) {
 
-function consumeMessage() {
+    array_shift($context);
     readline_completion_function('consumers');
-    $input = readline("Send message: ");
 
-    var_dump($input);
-    exit;
-    print "message send\n";
+    $consumeConsumers = trim(readline("Input Consumers: "));
+    if (!empty($consumeConsumers)){
+        $consumers = explode(" ", $consumeConsumers);
+        foreach ($consumers as $key => $consumer)
+        {
+            $consumers[$key] = '@' . $consumer;
+        }
+
+        $context = array_merge($consumers, $context);
+    }
+    var_dump($context);
+    global $bootstrap;
+    $bootstrap->getContainer('message');
 }
 
 
