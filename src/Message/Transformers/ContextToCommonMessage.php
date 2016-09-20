@@ -10,7 +10,7 @@ class ContextToCommonMessage implements TransformerInterface
 {
     /**
      * @param $context
-     * @return mixed|void
+     * @return mixed
      */
     public function transform($context)
     {

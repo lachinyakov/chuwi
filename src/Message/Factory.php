@@ -53,6 +53,12 @@ class Factory
         );
     }
 
+    /**
+     * Возвращает сформированное сообщение для Sender
+     *
+     * @param string[] $context Массив данных для формирования сообщения.
+     * @return Message
+     */
     public function getMessageFromContext($context)
     {
         $type = $this->analiseType($context);

@@ -8,6 +8,12 @@ use Messenger\Message\Transformers\TransformerInterface;
 
 class ContextToPrivateMessage implements TransformerInterface
 {
+    /**
+     * Трансформирует контекст в сообщение.
+     *
+     * @param $context
+     * @return mixed
+     */
     public function transform($context)
     {
         $consumers = array();

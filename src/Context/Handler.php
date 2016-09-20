@@ -4,9 +4,21 @@ namespace Messenger\Context;
 
 class Handler {
 
+    /**
+     * Конечный массив данных, введёных пользователем
+     * для создания сообщения.
+     *
+     * @var string[]
+     */
     protected $context;
 
 
+    /**
+     * Обрабатывает первичный масссив аргументов,
+     * введеный пользователем и формирует в требуемый контекст.
+     *
+     * @param $arguments
+     */
     public function handle($arguments) {
         array_shift($arguments);
         if (!empty($arguments)) {
@@ -16,6 +28,13 @@ class Handler {
         }
     }
 
+    /**
+     * Принимает и обрабатывает аргументы,
+     * в случае, если не добавлен ни один пользователь - предлагает его добавить.
+     *
+     * @param $arguments
+     * @return mixed
+     */
     private function consumeArguments($arguments)
     {
         $this->context = $arguments;
@@ -27,6 +46,13 @@ class Handler {
         }
     }
 
+    /**
+     * Возвращает Список доступных пользователй для отправки приватным сообщением.
+     *
+     * @param $input
+     * @param $index
+     * @return string[]
+     */
     public function getUsers($input, $index) {
         return array(
             "mrBadger",
@@ -45,6 +71,9 @@ class Handler {
         );
     }
 
+    /**
+     * Предлагает ввести получателей.
+     */
     private function offerAddConsumers()
     {
         readline_completion_function(array($this, 'getUsers'));
@@ -60,6 +89,9 @@ class Handler {
         }
     }
 
+    /**
+     * Предлагает ввести сообщение.
+     */
     private function offerSetArguments()
     {
         echo "\nPlease Input message: ";
@@ -71,7 +103,9 @@ class Handler {
     }
 
     /**
-     * @return mixed
+     * Возвращает сформированный контекст.
+     *
+     * @return string[]
      */
     public function getContext()
     {
