@@ -1,6 +1,6 @@
 <?php
 
-namespace Messeger\Exception;
+namespace Messenger\Exception;
 
 class ContainerIsNotExist extends \Exception
 {}

@@ -35,7 +35,7 @@ class Factory
     private function analiseType($context)
     {
         $type = Message::TYPE_COMMON_MESSAGE;
-        if ("@max" == $context[0]) {
+        if ("@mrBadger" == $context[0]) {
             $type = Message::TYPE_PRIVATE_MESSAGE;
         }
 

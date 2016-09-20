@@ -13,7 +13,7 @@ class ContextToPrivateMessage implements TransformerInterface
         $consumers = array();
 
         foreach ($context as $token) {
-            if ("@max" == $token) {
+            if ("@mrBadger" == $token) {
                  array_push($consumers, substr($token, 1));
             }
         }

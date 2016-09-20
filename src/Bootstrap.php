@@ -2,7 +2,7 @@
 
 namespace Messenger;
 
-use Messeger\Exception\ContainerIsNotExist;
+use Messenger\Exception\ContainerIsNotExist;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use Pimple\Container;
 
@@ -56,6 +56,9 @@ class Bootstrap
             return new Message\Factory();
         };
 
+        $this->container['context.handler'] = function () {
+            return new Context\Handler();
+        };
     }
 
     /**

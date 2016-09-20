@@ -26,31 +26,22 @@ function consumers() {
     return $consumers;
 };
 
-if (isset($argv[1])) {
-    consumeMessage($argv);
-}
 
-function consumeMessage($context) {
+consumeInput($argv);
 
-    array_shift($context);
-    readline_completion_function('consumers');
-
-    $consumeConsumers = trim(readline("Input Consumers: "));
-    if (!empty($consumeConsumers)){
-        $consumers = explode(" ", $consumeConsumers);
-        foreach ($consumers as $key => $consumer)
-        {
-            $consumers[$key] = '@' . $consumer;
-        }
-
-        $context = array_merge($consumers, $context);
-    }
-    $bootstrap = \Messenger\Bootstrap::getInstance();
+function consumeInput($input) {
+    $bootstrap      = \Messenger\Bootstrap::getInstance();
+    /**
+     * @var \Messenger\Context\Handler $contextHandler
+     */
+    $contextHandler = $bootstrap->getContainer('context.handler');
+    $contextHandler->handle($input);
+    $context        = $contextHandler->getContext();
     /**
      * @var \Messenger\Message\Factory $messageFactory
      */
     $messageFactory = $bootstrap->getContainer('message.factory');
-    $message = $messageFactory->getMessageFromContext($context);
+    $message        = $messageFactory->getMessageFromContext($context);
     var_dump($message);
 }
 
