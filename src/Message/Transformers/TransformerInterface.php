@@ -1,5 +1,7 @@
 <?php
 
+namespace Messenger\Message\Transformers;
+
 /**
  * Общий интерфейс для всех трансформеров Message
  *

@@ -1,0 +1,19 @@
+---
+# Добавляет соответсвующие репозитории для установки окружения
+- name: add repos
+  apt_repository: repo={{ item }} state=present
+  with_items:
+    - 'ppa:ondrej/php5-5.6'
+
+- name: update apt cache
+  apt: update_cache=yes
+
+- name: Install php5-fpm and deps
+  apt: name={{ item }} state=present
+  with_items:
+    - php5
+
+- name: Config php.ini
+  template:
+    src=php.ini
+    dest=/etc/php5/fpm/php.ini

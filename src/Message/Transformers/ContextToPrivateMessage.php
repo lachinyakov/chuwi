@@ -4,16 +4,24 @@ namespace Messenger\Message\Transformers;
 
 
 use Messenger\Message\Message;
+use Messenger\Message\Transformers\TransformerInterface;
 
-class ContextToPrivateMessage implements \TransformerInterface
+class ContextToPrivateMessage implements TransformerInterface
 {
-
-    /**
-     * @param $context
-     * @return mixed|void
-     */
     public function transform($context)
     {
-       return new Message(Message::TYPE_COMMON_MESSAGE, implode(" ", $context));
+        $consumers = array();
+
+        foreach ($context as $token) {
+            if ("@max" == $token) {
+                 array_push($consumers, substr($token, 1));
+            }
+        }
+
+        $message = new Message(Message::TYPE_PRIVATE_MESSAGE, implode(' ', $context));
+
+        $message->setConsumers($consumers);
+
+        return $message;
     }
 }

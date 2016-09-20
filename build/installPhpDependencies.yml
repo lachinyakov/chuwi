@@ -1,0 +1,7 @@
+---
+- name: Staring Install PHPDependencies
+  hosts: localhost
+  become: true
+
+  roles:
+    - php5

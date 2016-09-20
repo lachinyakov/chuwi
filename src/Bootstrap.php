@@ -52,6 +52,9 @@ class Bootstrap
              return new Consumer($connection);
         };
 
+        $this->container['message.factory'] = function () {
+            return new Message\Factory();
+        };
 
     }
 
