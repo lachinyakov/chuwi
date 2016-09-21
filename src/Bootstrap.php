@@ -47,9 +47,10 @@ class Bootstrap
          * @return Consumer
          */
         $this->container['consumer'] = function($c) {
+            $config = $c['config'];
             $connection = $c['amqp.connection'];
 
-             return new Consumer($connection);
+             return new Consumer($connection, $config['chatUser']);
         };
 
         $this->container['message.factory'] = function () {

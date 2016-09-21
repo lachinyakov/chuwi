@@ -1,0 +1,14 @@
+#!/usr/bin/php
+<?php
+require_once __DIR__ . '/../vendor/autoload.php';
+startServer();
+function startServer() {
+    $bootstrap      = \Messenger\Bootstrap::getInstance();
+    /**
+     * @var Messenger\Consumer $consumer
+     */
+    $consumer = $bootstrap->getContainer('consumer');
+    $consumer->consume();
+}
+
+

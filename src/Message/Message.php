@@ -14,12 +14,12 @@ class Message {
     /**
      * @var int
      */
-    private $type;
+    protected $type;
 
     /**
      * @var mixed содержимое сообщения.
      */
-    private $body;
+    protected $body;
 
     /**
      * @var string[] Массив получателей.
@@ -56,5 +56,14 @@ class Message {
     public function setConsumers($consumers)
     {
         $this->consumers = $consumers;
+    }
+
+    public function getFields()
+    {
+        return array(
+            "body" => $this->body,
+            "type" => $this->type,
+            "consumers" => $this->consumers
+        );
     }
 }

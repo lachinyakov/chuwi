@@ -9,13 +9,17 @@ class Consumer {
      * @var AMQPStreamConnection
      */
     private $connection;
+    private $userName;
 
     /**
      * Consumer constructor.
+     * @param $connection
+     * @param $userName
      */
-    public function __construct($connection)
+    public function __construct($connection, $userName)
     {
         $this->connection = $connection;
+        $this->userName   = $userName;
     }
 
     /**
@@ -23,11 +27,12 @@ class Consumer {
      */
     public function consume() {
         $channel = $this->connection->channel();
-        $channel->exchange_declare('exchange', 'fanout', false, false, false);
+        $channel->exchange_declare($this->userName, 'fanout', false, false, false);
 
         list($queue_name, ,) = $channel->queue_declare("", false, false, true, false);
 
-        $channel->queue_bind($queue_name, 'exchange');
+
+        $channel->queue_bind($queue_name, $this->userName);
 
         echo ' [*] Waiting for logs. To exit press CTRL+C', "\n";
 

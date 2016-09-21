@@ -2,6 +2,7 @@
 
 namespace Messenger;
 
+use Messenger\Exception\MethodNotAllowed;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -21,6 +22,8 @@ class Sender {
 
     /**
      * @param string $message сообщениею
+     *
+     * @return bool
      */
     public function send($message)
     {
@@ -30,7 +33,10 @@ class Sender {
         $channel->basic_publish($msg, 'exchange');
         $channel->close();
         $this->connection->close();
+    }
 
-        return true;
+    public function call()
+    {
+        throw new MethodNotAllowed();
     }
 }
