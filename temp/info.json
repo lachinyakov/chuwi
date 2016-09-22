@@ -1,14 +1,14 @@
 [
   {
     "name": "mrBadger",
-    "consumeKey": "sfd",
-    "publishKey": "",
+    "encryptKey": "sfd",
+    "routingKey": "",
     "type": ""
   },
   {
-    "name": "domio",
-    "consumeKey": "sfd",
-    "publishKey": "",
+    "name": "cds",
+    "encryptKey": "sfd",
+    "routingKey": "",
     "type": ""
   }
 ]

@@ -1,7 +1,16 @@
 <?php
 
-class Service
+namespace Messenger\User;
+
+use Messenger\User\User;
+
+class UserService
 {
+    /**
+     * @var UserService
+     */
+    protected static $instance;
+
     /**
      * @var User[]
      */
@@ -16,7 +25,7 @@ class Service
      *
      * @param $pathToTemp
      */
-    public function __construct($pathToTemp)
+    protected function __construct($pathToTemp)
     {
         $this->pathToTemp = $pathToTemp;
         $this->initUsers();
@@ -34,6 +43,16 @@ class Service
     }
 
     /**
+     * Возвращает список сущностей Юзеров.
+     *
+     * @return array
+     */
+    public function getUsersNames()
+    {
+        return array_keys($this->users);
+    }
+
+    /**
      * Возвращает пользователя по нику.
      *
      * @param $name
@@ -48,14 +67,33 @@ class Service
     }
 
 
+    /**
+     * Инициализирует всех доступных пользователей.
+     */
     protected function initUsers()
     {
         $this->users = array();
-        $userInfo    = json_decode(file_get_contents($this->pathToTemp . "info.json"), true);
+        $fileBody    = file_get_contents($this->pathToTemp . "/info.json");
+        $userInfo    = json_decode($fileBody, true);
         foreach ($userInfo as $userData) {
+
             $user                   = new User($userData);
             $userName               = $userData["name"];
             $this->users[$userName] = $user;
         }
+    }
+
+    /**
+     * @param $pathToTemp
+     *
+     * @return UserService
+     */
+    public static function getInstance($pathToTemp)
+    {
+        if (is_null(self::$instance)) {
+            self::$instance = new self($pathToTemp);
+        }
+
+        return self::$instance;
     }
 }

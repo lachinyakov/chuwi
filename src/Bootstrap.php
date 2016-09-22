@@ -5,7 +5,7 @@ namespace Messenger;
 use Messenger\Exception\ContainerIsNotExist;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use Pimple\Container;
-use Service;
+use Messenger\User\UserService;
 
 class Bootstrap
 {
@@ -26,7 +26,7 @@ class Bootstrap
         };
 
         $this->container['amqp.connection'] = function ($c) {
-            $config     = $c['config'];
+            $config = $c['config'];
             $connection = new AMQPStreamConnection(
                 $config['host'],
                 $config['port'],
@@ -49,7 +49,7 @@ class Bootstrap
          * @return Consumer
          */
         $this->container['consumer'] = function ($c) {
-            $config     = $c['config'];
+            $config = $c['config'];
             $connection = $c['amqp.connection'];
 
             return new Consumer($connection, $config['chatUser']);
@@ -59,14 +59,14 @@ class Bootstrap
             return new Message\Factory();
         };
 
-        $this->container['context.handler'] = function () {
-            return new Context\Handler();
+        $this->container['context.handler'] = function ($c) {
+            return new Context\Handler($c);
         };
 
-        $this->container['service.users'] = function ($c) {
+        $this->container['user.service'] = function ($c) {
             $config = $c['config'];
 
-            return new Service($config['pathToTemp']);
+            return UserService::getInstance($config['pathToTemp']);
         };
     }
 

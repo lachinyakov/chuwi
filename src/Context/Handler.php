@@ -2,6 +2,9 @@
 
 namespace Messenger\Context;
 
+use Messenger\User\UserService;
+use Pimple\Container;
+
 class Handler
 {
     /**
@@ -11,6 +14,20 @@ class Handler
      * @var string[]
      */
     protected $context;
+    /**
+     * @var Container
+     */
+    protected $container;
+
+    /**
+     * Handler constructor.
+     *
+     * @param $container
+     */
+    public function __construct($container)
+    {
+        $this->container = $container;
+    }
 
 
     /**
@@ -60,21 +77,12 @@ class Handler
      */
     public function getUsers($input, $index)
     {
-        return array(
-            "mrBadger",
-            "v",
-            "dghost",
-            "domio",
-            "irvis",
-            "ilia",
-            "max",
-            "alexander",
-            "cnam",
-            "moshhh",
-            "slack/me",
-            "slack/barabule4ka",
-            "telegram",
-        );
+        /**
+         * @var UserService $userService
+         */
+        $userService = $this->container['user.service'];
+
+        return $userService->getUsersNames();
     }
 
     /**
@@ -82,10 +90,12 @@ class Handler
      */
     private function offerAddConsumers()
     {
-        readline_completion_function(array(
-                                         $this,
-                                         'getUsers',
-                                     ));
+        readline_completion_function(
+            array(
+                $this,
+                'getUsers',
+            )
+        );
         $consumeConsumers = trim(readline("Input Consumers: "));
         if (!empty($consumeConsumers)) {
             $consumers = explode(" ", $consumeConsumers);

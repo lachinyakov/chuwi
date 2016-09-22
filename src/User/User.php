@@ -1,13 +1,18 @@
 <?php
 
+namespace Messenger\User;
+
 class User
 {
+    /**
+     * @var string
+     */
     protected $name;
 
     /**
      * @var string
      */
-    protected $encriptKey;
+    protected $encryptKey;
     /**
      * @var string
      */
@@ -22,7 +27,8 @@ class User
      */
     public function __construct($data)
     {
-        $this->encriptKey = $data['encriptKey'];
+        $this->name       = $data['name'];
+        $this->encryptKey = $data['encryptKey'];
         $this->routingKey = $data['routingKey'];
     }
 
@@ -31,7 +37,7 @@ class User
      */
     public function getEncriptKey()
     {
-        return $this->encriptKey;
+        return $this->encryptKey;
     }
 
     /**
