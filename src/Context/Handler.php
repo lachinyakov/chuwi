@@ -2,8 +2,8 @@
 
 namespace Messenger\Context;
 
-class Handler {
-
+class Handler
+{
     /**
      * Конечный массив данных, введёных пользователем
      * для создания сообщения.
@@ -19,7 +19,8 @@ class Handler {
      *
      * @param $arguments
      */
-    public function handle($arguments) {
+    public function handle($arguments)
+    {
         array_shift($arguments);
         if (!empty($arguments)) {
             $this->consumeArguments($arguments);
@@ -30,9 +31,11 @@ class Handler {
 
     /**
      * Принимает и обрабатывает аргументы,
-     * в случае, если не добавлен ни один пользователь - предлагает его добавить.
+     * в случае, если не добавлен ни один пользователь - предлагает его
+     * добавить.
      *
      * @param $arguments
+     *
      * @return mixed
      */
     private function consumeArguments($arguments)
@@ -47,13 +50,16 @@ class Handler {
     }
 
     /**
-     * Возвращает Список доступных пользователй для отправки приватным сообщением.
+     * Возвращает Список доступных пользователй для отправки приватным
+     * сообщением.
      *
      * @param $input
      * @param $index
+     *
      * @return string[]
      */
-    public function getUsers($input, $index) {
+    public function getUsers($input, $index)
+    {
         return array(
             "mrBadger",
             "v",
@@ -67,7 +73,7 @@ class Handler {
             "moshhh",
             "slack/me",
             "slack/barabule4ka",
-            "telegram"
+            "telegram",
         );
     }
 
@@ -76,12 +82,14 @@ class Handler {
      */
     private function offerAddConsumers()
     {
-        readline_completion_function(array($this, 'getUsers'));
+        readline_completion_function(array(
+                                         $this,
+                                         'getUsers',
+                                     ));
         $consumeConsumers = trim(readline("Input Consumers: "));
-        if (!empty($consumeConsumers)){
+        if (!empty($consumeConsumers)) {
             $consumers = explode(" ", $consumeConsumers);
-            foreach ($consumers as $key => $consumer)
-            {
+            foreach ($consumers as $key => $consumer) {
                 $consumers[$key] = '@' . $consumer;
             }
 

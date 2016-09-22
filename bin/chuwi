@@ -2,14 +2,15 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 consumeInput($argv);
-function consumeInput($input) {
-    $bootstrap      = \Messenger\Bootstrap::getInstance();
+function consumeInput($input)
+{
+    $bootstrap = \Messenger\Bootstrap::getInstance();
     /**
      * @var \Messenger\Context\Handler $contextHandler
      */
     $contextHandler = $bootstrap->getContainer('context.handler');
     $contextHandler->handle($input);
-    $context        = $contextHandler->getContext();
+    $context = $contextHandler->getContext();
     if (!empty($context)) {
         /**
          * @var \Messenger\Message\Factory $messageFactory

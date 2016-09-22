@@ -4,7 +4,8 @@ namespace Messenger;
 
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 
-class Consumer {
+class Consumer
+{
     /**
      * @var AMQPStreamConnection
      */
@@ -13,6 +14,7 @@ class Consumer {
 
     /**
      * Consumer constructor.
+     *
      * @param $connection
      * @param $userName
      */
@@ -22,10 +24,8 @@ class Consumer {
         $this->userName   = $userName;
     }
 
-    /**
-     * @param string $exchange наименование обменника.
-     */
-    public function consume() {
+    public function consume()
+    {
         $channel = $this->connection->channel();
         $channel->exchange_declare($this->userName, 'fanout', false, false, false);
 
@@ -36,13 +36,13 @@ class Consumer {
 
         echo ' [*] Waiting for logs. To exit press CTRL+C', "\n";
 
-        $callback = function($msg){
-          echo ' [x] ', $msg->body, "\n";
+        $callback = function ($msg) {
+            echo ' [x] ', $msg->body, "\n";
         };
 
         $channel->basic_consume($queue_name, '', false, true, false, false, $callback);
 
-        while(count($channel->callbacks)) {
+        while (count($channel->callbacks)) {
             $channel->wait();
         }
 

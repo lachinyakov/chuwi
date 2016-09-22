@@ -6,5 +6,6 @@ return array(
     'user'       => 'guest',
     'password'   => 'guest',
     'chatUser'   => 'mrBadger',
-    'secret_key' => 'secret_key'
+    'secret_key' => 'secret_key',
+    'pathToTemp' => __DIR__ . '/../temp',
 );
