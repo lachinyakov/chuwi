@@ -7,7 +7,8 @@ namespace Messenger\Message;
  *
  * @package Messenger\Message
  */
-class Message {
+class Message
+{
 
     const TYPE_COMMON_MESSAGE  = 0;
     const TYPE_PRIVATE_MESSAGE = 1;
@@ -28,6 +29,7 @@ class Message {
 
     /**
      * Message constructor.
+     *
      * @param $type
      * @param $body
      */
@@ -61,9 +63,17 @@ class Message {
     public function getFields()
     {
         return array(
-            "body" => $this->body,
-            "type" => $this->type,
-            "consumers" => $this->consumers
+            "body"      => $this->body,
+            "type"      => $this->type,
+            "consumers" => $this->consumers,
         );
+    }
+
+    /**
+     * @return \string[]
+     */
+    public function getConsumers()
+    {
+        return $this->consumers;
     }
 }

@@ -22,7 +22,7 @@ function consumeInput($input)
          * @var Messenger\Sender $sender
          */
         $sender = $bootstrap->getContainer('sender');
-        $sender->send(json_encode($message->getFields()));
+        $sender->send($message);
     }
 }
 

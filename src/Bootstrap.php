@@ -26,7 +26,7 @@ class Bootstrap
         };
 
         $this->container['amqp.connection'] = function ($c) {
-            $config = $c['config'];
+            $config     = $c['config'];
             $connection = new AMQPStreamConnection(
                 $config['host'],
                 $config['port'],
@@ -38,9 +38,10 @@ class Bootstrap
         };
 
         $this->container['sender'] = function ($c) {
-            $connection = $c['amqp.connection'];
+            $connection  = $c['amqp.connection'];
+            $userService = $c['user.service'];
 
-            return new Sender($connection);
+            return new Sender($connection, $userService);
         };
 
         /**
@@ -49,7 +50,7 @@ class Bootstrap
          * @return Consumer
          */
         $this->container['consumer'] = function ($c) {
-            $config = $c['config'];
+            $config     = $c['config'];
             $connection = $c['amqp.connection'];
 
             return new Consumer($connection, $config['chatUser']);

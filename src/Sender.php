@@ -3,34 +3,47 @@
 namespace Messenger;
 
 use Messenger\Exception\MethodNotAllowed;
+use Messenger\Message\Message;
+use Messenger\User\UserService;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
-class Sender {
+class Sender
+{
     /**
      * @var AMQPStreamConnection
      */
     private $connection;
+    /**
+     * @var UserService
+     */
+    private $userService;
 
     /**
      * Consumer constructor.
      */
-    public function __construct($connection)
+    public function __construct($connection, $userService)
     {
-        $this->connection = $connection;
+        $this->connection  = $connection;
+        $this->userService = $userService;
     }
 
     /**
-     * @param string $message сообщениею
+     * @param Message $message сообщениею
      *
      * @return bool
      */
     public function send($message)
     {
-        $channel = $this->connection->channel();
-        $channel->exchange_declare('exchange', 'fanout', false, false, false);
-        $msg    = new AMQPMessage($message);
-        $channel->basic_publish($msg, 'exchange');
+        $consumers = $message->getConsumers();
+        $channel   = $this->connection->channel();
+        foreach ($consumers as $consumer) {
+            $consumer   = $this->userService->getUserByName($consumer);
+            $routingKey = $consumer->getName();
+            $channel->exchange_declare($routingKey, 'fanout', false, false, false);
+            $msg = new AMQPMessage($message);
+            $channel->basic_publish($msg, 'exchange');
+        }
         $channel->close();
         $this->connection->close();
     }
