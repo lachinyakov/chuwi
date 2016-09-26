@@ -19,10 +19,10 @@ function consumeInput($input)
         $message        = $messageFactory->getMessageFromContext($context);
 
         /**
-         * @var Messenger\Sender $sender
+         * @var Messenger\Publisher $sender
          */
-        $sender = $bootstrap->getContainer('sender');
-        $sender->send($message);
+        $sender = $bootstrap->getContainer('publisher');
+        $sender->publish($message);
     }
 }
 

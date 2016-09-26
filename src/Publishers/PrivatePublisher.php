@@ -1,14 +1,14 @@
 <?php
 
-namespace Messenger;
+namespace Messenger\Publishers;
 
-use Messenger\Exception\MethodNotAllowed;
 use Messenger\Message\Message;
+use Messenger\Publishers\PublisherInterface;
 use Messenger\User\UserService;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
-class Sender
+class PrivatePublisher implements PublisherInterface
 {
     /**
      * @var AMQPStreamConnection
@@ -20,7 +20,10 @@ class Sender
     private $userService;
 
     /**
-     * Consumer constructor.
+     * PrivatePublisher constructor.
+     *
+     * @param $connection
+     * @param $userService
      */
     public function __construct($connection, $userService)
     {
@@ -28,28 +31,28 @@ class Sender
         $this->userService = $userService;
     }
 
+
     /**
      * @param Message $message сообщениею
      *
      * @return bool
      */
-    public function send($message)
+    public function publish($message)
     {
         $consumers = $message->getConsumers();
         $channel   = $this->connection->channel();
+        $exchange  = $message->getType();
         foreach ($consumers as $consumer) {
-            $consumer   = $this->userService->getUserByName($consumer);
+            echo "\n $consumer \n";
+            $consumer = $this->userService->getUserByName($consumer);
+            $channel->exchange_declare(
+                $exchange, 'fanout', false, false, false
+            );
+            $msg        = new AMQPMessage($message->getBody());
             $routingKey = $consumer->getName();
-            $channel->exchange_declare($routingKey, 'fanout', false, false, false);
-            $msg = new AMQPMessage($message);
-            $channel->basic_publish($msg, 'exchange');
+            $channel->basic_publish($msg, $exchange, $routingKey);
         }
         $channel->close();
         $this->connection->close();
-    }
-
-    public function call()
-    {
-        throw new MethodNotAllowed();
     }
 }

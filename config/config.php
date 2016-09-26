@@ -5,7 +5,7 @@ return array(
     'port'       => 5672,
     'user'       => 'guest',
     'password'   => 'guest',
-    'chatUser'   => 'mrBadger',
+    'chatUser'   => 'cds',
     'secret_key' => 'secret_key',
     'pathToTemp' => __DIR__ . '/../temp',
 );

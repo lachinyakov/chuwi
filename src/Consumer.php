@@ -2,6 +2,7 @@
 
 namespace Messenger;
 
+use Messenger\Message\Message;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 class Consumer
@@ -26,21 +27,25 @@ class Consumer
 
     public function consume()
     {
-        $channel = $this->connection->channel();
-        $channel->exchange_declare($this->userName, 'fanout', false, false, false);
-
-        list($queue_name, ,) = $channel->queue_declare("", false, false, true, false);
-
-
-        $channel->queue_bind($queue_name, $this->userName);
-
-        echo ' [*] Waiting for logs. To exit press CTRL+C', "\n";
-
-        $callback = function ($msg) {
+        $channel       = $this->connection->channel();
+        $exchangesList = $this->getExchangesList();
+        $callback      = function ($msg) {
             echo ' [x] ', $msg->body, "\n";
         };
+        foreach ($exchangesList as $exchange => $routingKey) {
+            $channel->exchange_declare(
+                $exchange, 'fanout', false, false, false
+            );
+            list($queue_name, ,) = $channel->queue_declare(
+                "", false, false, true, false
+            );
+            $channel->queue_bind($queue_name, $exchange, $routingKey);
+            $channel->basic_consume(
+                $queue_name, '', false, true, false, false, $callback
+            );
+        }
 
-        $channel->basic_consume($queue_name, '', false, true, false, false, $callback);
+        echo ' Hello ' . $this->userName . '. To exit press CTRL+C', "\n";
 
         while (count($channel->callbacks)) {
             $channel->wait();
@@ -48,5 +53,13 @@ class Consumer
 
         $channel->close();
         $this->connection->close();
+    }
+
+    protected function getExchangesList()
+    {
+        return array(
+            Message::TYPE_COMMON_MESSAGE  => 'ShareQueue',
+            Message::TYPE_PRIVATE_MESSAGE => $this->userName,
+        );
     }
 }

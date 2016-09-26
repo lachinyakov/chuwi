@@ -3,6 +3,7 @@
 namespace Messenger;
 
 use Messenger\Exception\ContainerIsNotExist;
+use Messenger\Publishers\Publisher;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use Pimple\Container;
 use Messenger\User\UserService;
@@ -37,11 +38,11 @@ class Bootstrap
             return $connection;
         };
 
-        $this->container['sender'] = function ($c) {
+        $this->container['publisher'] = function ($c) {
             $connection  = $c['amqp.connection'];
             $userService = $c['user.service'];
 
-            return new Sender($connection, $userService);
+            return new Publisher($connection, $userService);
         };
 
         /**
