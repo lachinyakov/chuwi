@@ -37,7 +37,7 @@ class CommonPublisher implements PublisherInterface
         $channel  = $this->connection->channel();
         $exchange = $message->getType();
         $channel->exchange_declare(
-            $exchange, 'fanout', false, false, false
+            $exchange, 'topic', false, false, false
         );
         $msg = new AMQPMessage($message->getBody());
         $channel->basic_publish($msg, $exchange, 'ShareQueue');

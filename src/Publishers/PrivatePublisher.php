@@ -46,8 +46,9 @@ class PrivatePublisher implements PublisherInterface
             echo "\n $consumer \n";
             $consumer = $this->userService->getUserByName($consumer);
             $channel->exchange_declare(
-                $exchange, 'fanout', false, false, false
+                $exchange, 'topic', false, false, false
             );
+
             $msg        = new AMQPMessage($message->getBody());
             $routingKey = $consumer->getName();
             $channel->basic_publish($msg, $exchange, $routingKey);

@@ -35,7 +35,10 @@ class Factory
     private function analiseType($context)
     {
         $type = Message::TYPE_COMMON_MESSAGE;
-        if ("@mrBadger" == $context[0]) {
+        /**
+         * @todo: Доделать проверку пользователей искать в проекте по  CheckHasUser
+         */
+        if ("@mrBadger" == $context[0] || "@cds" == $context[0]) {
             $type = Message::TYPE_PRIVATE_MESSAGE;
         }
 

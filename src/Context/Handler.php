@@ -59,13 +59,24 @@ class Handler
     {
         $this->context = $arguments;
 
-        if ('@mrBadger' === $arguments[0]) {
+        if ($this->hasConsumers($arguments)) {
             return $arguments;
+
         } else {
             $this->offerAddConsumers();
         }
     }
 
+    /**
+     * Проверяет тип есть в переданных аргумента аргументах
+     * Пользователи.
+     *
+     * @todo Доделать. По умолчанию  всегда говорит что пользователи якобы есть. Искать в проекте по  CheckHasUser
+     */
+    private function hasConsumers($arguments) {
+        $users         = $this->getUsers();
+        return true;
+    }
     /**
      * Возвращает Список доступных пользователй для отправки приватным
      * сообщением.
@@ -75,7 +86,7 @@ class Handler
      *
      * @return string[]
      */
-    public function getUsers($input, $index)
+    public function getUsers($input = '', $index = 0)
     {
         /**
          * @var UserService $userService

@@ -19,7 +19,10 @@ class ContextToPrivateMessage implements TransformerInterface
         $consumers = array();
 
         foreach ($context as $token) {
-            if ("@mrBadger" == $token) {
+            /**
+             * @todo: Доделать проверку пользователей искать в проекте по  CheckHasUser
+             */
+            if ("@mrBadger" == $token || "@cds" == $token) {
                  array_push($consumers, substr($token, 1));
             }
         }

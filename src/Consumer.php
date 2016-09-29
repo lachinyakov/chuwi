@@ -25,6 +25,9 @@ class Consumer
         $this->userName   = $userName;
     }
 
+    /**
+     * Заускает вход
+     */
     public function consume()
     {
         $channel       = $this->connection->channel();
@@ -34,7 +37,7 @@ class Consumer
         };
         foreach ($exchangesList as $exchange => $routingKey) {
             $channel->exchange_declare(
-                $exchange, 'fanout', false, false, false
+                $exchange, 'topic', false, false, false
             );
             list($queue_name, ,) = $channel->queue_declare(
                 "", false, false, true, false

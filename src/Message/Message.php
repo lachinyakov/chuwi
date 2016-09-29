@@ -10,8 +10,8 @@ namespace Messenger\Message;
 class Message
 {
 
-    const TYPE_COMMON_MESSAGE  = 0;
-    const TYPE_PRIVATE_MESSAGE = 1;
+    const TYPE_COMMON_MESSAGE  = 'public';
+    const TYPE_PRIVATE_MESSAGE = 'private';
     /**
      * @var int
      */
