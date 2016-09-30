@@ -3,30 +3,30 @@
 namespace Messenger\Context;
 
 use Messenger\User\UserService;
-use Pimple\Container;
 
 class Handler
 {
+    const TOKEN_USER_TAG = '@';
+
     /**
      * Конечный массив данных, введёных пользователем
      * для создания сообщения.
      *
      * @var string[]
      */
-    protected $context;
     /**
-     * @var Container
+     * @var UserService
      */
-    protected $container;
+    protected $userService;
 
     /**
      * Handler constructor.
      *
-     * @param $container
+     * @param $userService
      */
-    public function __construct($container)
+    public function __construct($userService)
     {
-        $this->container = $container;
+        $this->userService = $userService;
     }
 
 
@@ -74,7 +74,7 @@ class Handler
      * @todo Доделать. По умолчанию  всегда говорит что пользователи якобы есть. Искать в проекте по  CheckHasUser
      */
     private function hasConsumers($arguments) {
-        $users         = $this->getUsers();
+        $names = $this->userService->getUsersNames();
         return true;
     }
     /**
@@ -88,12 +88,7 @@ class Handler
      */
     public function getUsers($input = '', $index = 0)
     {
-        /**
-         * @var UserService $userService
-         */
-        $userService = $this->container['user.service'];
-
-        return $userService->getUsersNames();
+        return $this->userService->getUsersNames();
     }
 
     /**
@@ -111,7 +106,7 @@ class Handler
         if (!empty($consumeConsumers)) {
             $consumers = explode(" ", $consumeConsumers);
             foreach ($consumers as $key => $consumer) {
-                $consumers[$key] = '@' . $consumer;
+                $consumers[$key] = self::TOKEN_USER_TAG . $consumer;
             }
 
             $this->context = array_merge($consumers, $this->context);

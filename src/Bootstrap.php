@@ -19,13 +19,17 @@ class Bootstrap
     protected function __construct()
     {
         $this->container = new Container();
-
         $this->container['config'] = function ($c) {
             $config = require_once __DIR__ . "/../config/config.php";
 
             return $config;
         };
 
+        /**
+         * @param $c
+         *
+         * @return AMQPStreamConnection
+         */
         $this->container['amqp.connection'] = function ($c) {
             $config     = $c['config'];
             $connection = new AMQPStreamConnection(
@@ -38,6 +42,11 @@ class Bootstrap
             return $connection;
         };
 
+        /**
+         * @param $c
+         *
+         * @return Publisher
+         */
         $this->container['publisher'] = function ($c) {
             $connection  = $c['amqp.connection'];
             $userService = $c['user.service'];
@@ -57,14 +66,35 @@ class Bootstrap
             return new Consumer($connection, $config['chatUser']);
         };
 
+        /**
+         * Фабрика сущности сообщения для чата.
+         *
+         * @return Message\Factory
+         */
         $this->container['message.factory'] = function () {
             return new Message\Factory();
         };
 
+        /**
+         * Обработчи введной информации пользователем.
+         *
+         * @param $c
+         *
+         * @return Context\Handler
+         */
         $this->container['context.handler'] = function ($c) {
-            return new Context\Handler($c);
+            $userService = $c['user.service'];
+
+            return new Context\Handler($userService);
         };
 
+        /**
+         * Сервис для работы с пользователем.
+         *
+         * @param $c
+         *
+         * @return UserService
+         */
         $this->container['user.service'] = function ($c) {
             $config = $c['config'];
 
