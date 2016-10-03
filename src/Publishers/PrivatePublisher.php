@@ -4,6 +4,7 @@ namespace Messenger\Publishers;
 
 use Messenger\Message\Message;
 use Messenger\Publishers\PublisherInterface;
+use Messenger\User\User;
 use Messenger\User\UserService;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -14,21 +15,16 @@ class PrivatePublisher implements PublisherInterface
      * @var AMQPStreamConnection
      */
     private $connection;
-    /**
-     * @var UserService
-     */
-    private $userService;
 
     /**
      * PrivatePublisher constructor.
      *
      * @param $connection
-     * @param $userService
      */
-    public function __construct($connection, $userService)
+    public function __construct($connection)
     {
         $this->connection  = $connection;
-        $this->userService = $userService;
+
     }
 
 
@@ -42,9 +38,11 @@ class PrivatePublisher implements PublisherInterface
         $consumers = $message->getConsumers();
         $channel   = $this->connection->channel();
         $exchange  = $message->getType();
+        /**
+         * @var User $consumer
+         */
         foreach ($consumers as $consumer) {
-            echo "\n $consumer \n";
-            $consumer = $this->userService->getUserByName($consumer);
+            echo "\n" . $consumer->getName() . " ";
             $channel->exchange_declare(
                 $exchange, 'topic', false, false, false
             );
@@ -52,6 +50,8 @@ class PrivatePublisher implements PublisherInterface
             $msg        = new AMQPMessage($message->getBody());
             $routingKey = $consumer->getName();
             $channel->basic_publish($msg, $exchange, $routingKey);
+
+            echo " [v] \n";
         }
         $channel->close();
         $this->connection->close();

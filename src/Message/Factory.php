@@ -2,8 +2,9 @@
 
 namespace Messenger\Message;
 
-use Messenger\Message\Message;
+use Messenger\Analyzer\Analyzer;
 use Messenger\Message\Transformers\TransformerInterface;
+use Messenger\User\UserService;
 
 /**
  * Класс фабрика сообщения.
@@ -15,34 +16,25 @@ use Messenger\Message\Transformers\TransformerInterface;
  */
 class Factory
 {
+    /**
+     * @var UserService
+     */
+    protected $userService;
+    /**
+     * @var Analyzer
+     */
+    protected $analyzer;
     protected $transformers;
 
     /**
-     * Analisator constructor.
+     * @param $analyzer
+     * @param $userService
      */
-    public function __construct()
+    public function __construct($userService, $analyzer)
     {
+        $this->userService = $userService;
+        $this->analyzer    = $analyzer;
         $this->initTransformers();
-    }
-
-    /**
-     * Анализирует введёные данные.
-     *
-     * @param $context
-     *
-     * @return int
-     */
-    private function analiseType($context)
-    {
-        $type = Message::TYPE_COMMON_MESSAGE;
-        /**
-         * @todo: Доделать проверку пользователей искать в проекте по  CheckHasUser
-         */
-        if ("@mrBadger" == $context[0] || "@cds" == $context[0]) {
-            $type = Message::TYPE_PRIVATE_MESSAGE;
-        }
-
-        return $type;
     }
 
     /**
@@ -52,7 +44,7 @@ class Factory
     {
         $this->transformers = array(
             Message::TYPE_COMMON_MESSAGE  => new Transformers\ContextToCommonMessage,
-            Message::TYPE_PRIVATE_MESSAGE => new Transformers\ContextToPrivateMessage,
+            Message::TYPE_PRIVATE_MESSAGE => new Transformers\ContextToPrivateMessage($this->userService),
         );
     }
 
@@ -60,11 +52,12 @@ class Factory
      * Возвращает сформированное сообщение для Publisher
      *
      * @param string[] $context Массив данных для формирования сообщения.
+     *
      * @return Message
      */
     public function getMessageFromContext($context)
     {
-        $type = $this->analiseType($context);
+        $type = $this->analyzer->getTypeOfMessage($context);
         /**
          * @var TransformerInterface $transformer
          */

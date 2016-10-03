@@ -2,6 +2,8 @@
 
 namespace Messenger\Context;
 
+use Messenger\Analyzer\Analyzer;
+use Messenger\Message\Message;
 use Messenger\User\UserService;
 
 class Handler
@@ -9,24 +11,26 @@ class Handler
     const TOKEN_USER_TAG = '@';
 
     /**
-     * Конечный массив данных, введёных пользователем
-     * для создания сообщения.
-     *
-     * @var string[]
-     */
-    /**
      * @var UserService
      */
     protected $userService;
 
     /**
+     * @var Analyzer
+     */
+    protected $analyzer;
+    protected $context;
+
+    /**
      * Handler constructor.
      *
      * @param $userService
+     * @param $analyzer
      */
-    public function __construct($userService)
+    public function __construct($userService, $analyzer)
     {
         $this->userService = $userService;
+        $this->analyzer    = $analyzer;
     }
 
 
@@ -58,25 +62,12 @@ class Handler
     private function consumeArguments($arguments)
     {
         $this->context = $arguments;
-
-        if ($this->hasConsumers($arguments)) {
-            return $arguments;
-
-        } else {
+        $typeOfMessage = $this->analyzer->getTypeOfMessage($arguments);
+        if (Message::TYPE_PRIVATE_MESSAGE != $typeOfMessage) {
             $this->offerAddConsumers();
         }
     }
 
-    /**
-     * Проверяет тип есть в переданных аргумента аргументах
-     * Пользователи.
-     *
-     * @todo Доделать. По умолчанию  всегда говорит что пользователи якобы есть. Искать в проекте по  CheckHasUser
-     */
-    private function hasConsumers($arguments) {
-        $names = $this->userService->getUsersNames();
-        return true;
-    }
     /**
      * Возвращает Список доступных пользователй для отправки приватным
      * сообщением.

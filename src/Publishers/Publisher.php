@@ -4,11 +4,7 @@ namespace Messenger\Publishers;
 
 use Messenger\Exception\MethodNotAllowed;
 use Messenger\Message\Message;
-use Messenger\Publishers\PublisherInterface;
-use Messenger\User\UserService;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
-use Messenger\Publishers\PrivatePublisher;
-
 
 class Publisher implements PublisherInterface
 {
@@ -16,21 +12,15 @@ class Publisher implements PublisherInterface
      * @var AMQPStreamConnection
      */
     private $connection;
-    /**
-     * @var UserService
-     */
-    private $userService;
 
     /**
      * Consumer constructor.
      *
      * @param $connection
-     * @param $userService
      */
-    public function __construct($connection, $userService)
+    public function __construct($connection)
     {
         $this->connection  = $connection;
-        $this->userService = $userService;
     }
 
     /**
@@ -57,7 +47,7 @@ class Publisher implements PublisherInterface
     {
         $classes = array(
             Message::TYPE_COMMON_MESSAGE  => new CommonPublisher($this->connection),
-            Message::TYPE_PRIVATE_MESSAGE => new PrivatePublisher($this->connection, $this->userService),
+            Message::TYPE_PRIVATE_MESSAGE => new PrivatePublisher($this->connection),
         );
 
         return $classes[$type];

@@ -2,6 +2,7 @@
 
 namespace Messenger;
 
+use Messenger\Analyzer\Analyzer;
 use Messenger\Exception\ContainerIsNotExist;
 use Messenger\Publishers\Publisher;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
@@ -18,7 +19,7 @@ class Bootstrap
      */
     protected function __construct()
     {
-        $this->container = new Container();
+        $this->container           = new Container();
         $this->container['config'] = function ($c) {
             $config = require_once __DIR__ . "/../config/config.php";
 
@@ -49,9 +50,8 @@ class Bootstrap
          */
         $this->container['publisher'] = function ($c) {
             $connection  = $c['amqp.connection'];
-            $userService = $c['user.service'];
 
-            return new Publisher($connection, $userService);
+            return new Publisher($connection);
         };
 
         /**
@@ -71,8 +71,8 @@ class Bootstrap
          *
          * @return Message\Factory
          */
-        $this->container['message.factory'] = function () {
-            return new Message\Factory();
+        $this->container['message.factory'] = function ($c) {
+            return new Message\Factory($c['user.service'], $c['analyzer']);
         };
 
         /**
@@ -83,9 +83,16 @@ class Bootstrap
          * @return Context\Handler
          */
         $this->container['context.handler'] = function ($c) {
-            $userService = $c['user.service'];
+            return new Context\Handler($c['user.service'], $c['analyzer']);
+        };
 
-            return new Context\Handler($userService);
+        /**
+         * Анализатор типа сообщения.
+         *
+         * @return Context\Handler
+         */
+        $this->container['analyzer'] = function () {
+            return new Analyzer();
         };
 
         /**

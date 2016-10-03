@@ -1,6 +1,7 @@
 <?php
 
 namespace Messenger\Message;
+use Messenger\User\User;
 
 /**
  * Class Message
@@ -23,7 +24,7 @@ class Message
     protected $body;
 
     /**
-     * @var string[] Массив получателей.
+     * @var User[] Массив получателей.
      */
     protected $consumers;
 
